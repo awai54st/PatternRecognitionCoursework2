@@ -26,12 +26,16 @@ randNormWineDataC3 = normWineDataC3(randperm(48),:);
 trainingWineData = [randWineDataC1(1:39,:); randWineDataC2(1:47,:); randWineDataC3(1:32,:)];
 validationWineData = [randWineDataC1(40:46,:); randWineDataC2(48:55,:); randWineDataC3(33:37,:)];
 testingWineData = [randWineDataC1(47:59,:); randWineDataC2(56:71,:); randWineDataC3(38:48,:)];
+
 %Split data into unit norm l2 training, validation, testing set
 normTrainingWineData = [randNormWineDataC1(1:39,:); randNormWineDataC2(1:47,:); randNormWineDataC3(1:32,:)];
 normValidationWineData = [randNormWineDataC1(40:46,:); randNormWineDataC2(48:55,:); randNormWineDataC3(33:37,:)];
 normTestingWineData = [randNormWineDataC1(47:59,:); randNormWineDataC2(56:71,:); randNormWineDataC3(38:48,:)];
 
-
+%Class labels
+trainingDataClassLabel = [ones(1,39), 2*ones(1,47), 3*ones(1,32)];
+validationDataClassLabel = [ones(1,7), 2*ones(1,8), 3*ones(1,5)];
+testingDataClassLabel = [ones(1,13), 2*ones(1,16), 3*ones(1,11)];
 %% Q1)B) wakakakakakaka 
 
 covMatrixAll = cov(wineData);
@@ -115,4 +119,32 @@ title('Dimensions with lowest covariance');
 %scatter (covMatrixC1(1, :), covMatrixC1(2, :));
 
 %%Q1)D)
+%L2-Euclidean distance
+L2index = knnsearch(trainingWineData, testingWineData);
+L2ClassLabel = zeros(1,40);
+for i = L2index
+    L2ClassLabel = trainingDataClassLabel(i);
+end
+
+%L1-CityBlock distance
+L1index = knnsearch(trainingWineData, testingWineData, 'Distance', 'cityblock');
+L1ClassLabel = zeros(1,40);
+for i = L1index
+    L1ClassLabel = trainingDataClassLabel(i);
+end
+
+%Chi-square distance 
+chiIndex = chiSqrDist(trainingWineData, testingWineData);
+chiClassLabel = zeros(1,40);
+for i = L1index
+    chiClassLabel = trainingDataClassLabel(i);
+end
+
+%Correlation distance
+correlationIndex = knnsearch(trainingWineData, testingWineData, 'Distance', 'correlation');
+correlationClassLabel = zeros(1,40);
+for i = correlationIndex
+    correlationClassLabel = trainingDataClassLabel(i);
+end
+
 
