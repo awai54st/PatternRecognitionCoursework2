@@ -14,22 +14,10 @@ normWineDataC1 = normr(wineDataC1);
 normWineDataC2 = normr(wineDataC2);
 normWineDataC3 = normr(wineDataC3);
 
-%Split data into training, validation, testing set
-randWineDataC1 = wineDataC1(randperm(59),:);
-randWineDataC2 = wineDataC2(randperm(71),:);
-randWineDataC3 = wineDataC3(randperm(48),:);
-
-randNormWineDataC1 = normWineDataC1(randperm(59),:);
-randNormWineDataC2 = normWineDataC2(randperm(71),:);
-randNormWineDataC3 = normWineDataC3(randperm(48),:);
-
-trainingWineData = [randWineDataC1(1:39,:); randWineDataC2(1:47,:); randWineDataC3(1:32,:)];
-validationWineData = [randWineDataC1(40:46,:); randWineDataC2(48:55,:); randWineDataC3(33:37,:)];
-testingWineData = [randWineDataC1(47:59,:); randWineDataC2(56:71,:); randWineDataC3(38:48,:)];
-%Split data into unit norm l2 training, validation, testing set
-normTrainingWineData = [randNormWineDataC1(1:39,:); randNormWineDataC2(1:47,:); randNormWineDataC3(1:32,:)];
-normValidationWineData = [randNormWineDataC1(40:46,:); randNormWineDataC2(48:55,:); randNormWineDataC3(33:37,:)];
-normTestingWineData = [randNormWineDataC1(47:59,:); randNormWineDataC2(56:71,:); randNormWineDataC3(38:48,:)];
+%Split data into training set
+trainingWineData = [wineDataC1(1:39,:); wineDataC2(1:47,:); wineDataC3(1:32,:)];
+validationWineData = [wineDataC1(40:46,:); wineDataC2(48:55,:); wineDataC3(33:37,:)];
+testingWineData = [wineDataC1(47:59,:); wineDataC2(56:71,:); wineDataC3(38:48,:)];
 
 
 %% Q1)B) wakakakakakaka 
