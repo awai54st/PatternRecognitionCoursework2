@@ -1,0 +1,17 @@
+function chiIndex = chiSqrDist(trainingWineData, testingWineData)
+    trainingSize = size(trainingWineData);
+    testSize = size(testingWineData,1);
+    chiIndex = zeros(1, testSize);
+    for i = testSize
+        eachTestData = testingWineData(i,:);
+        for j = trainingSize
+            eachTrainData = trainingWineData(j,:);
+            value = 0;
+            for k = size(testingWineData,2)
+                value = value + ((eachTestData(k) - eachTrainData(k))^2/(eachTestData(k)+eachTrainData(k)));
+            end
+            value = value / 2;
+            minValue = min(minValue, value);
+        end    
+    end
+end

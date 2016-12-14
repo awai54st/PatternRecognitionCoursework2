@@ -136,7 +136,7 @@ end
 %Chi-square distance 
 chiIndex = chiSqrDist(trainingWineData, testingWineData);
 chiClassLabel = zeros(1,40);
-for i = L1index
+for i = chiIndex
     chiClassLabel = trainingDataClassLabel(i);
 end
 
