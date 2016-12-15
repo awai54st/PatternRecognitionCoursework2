@@ -121,22 +121,60 @@ title('Dimensions with lowest covariance');
 %%Q1)D)
 %L2-Euclidean distance
 L2index = knnsearch(trainingWineData, testingWineData);
+L2NormIndex = knnsearch(normTrainingWineData, normTestingWineData);
+
 L2ClassLabel = zeros(1,40);
+L2NormClassLabel = zeros(1,40);
+
 for i = L2index
     L2ClassLabel = trainingDataClassLabel(i);
+end
+for i = L2NormIndex
+    L2NormClassLabel = trainingDataClassLabel(i);
 end
 
 %L1-CityBlock distance
 L1index = knnsearch(trainingWineData, testingWineData, 'Distance', 'cityblock');
+L1NormIndex = knnsearch(normTrainingWineData, normTestingWineData, 'Distance', 'cityblock');
+
 L1ClassLabel = zeros(1,40);
+L1NormClassLabel = zeros(1,40);
+
 for i = L1index
     L1ClassLabel = trainingDataClassLabel(i);
+end
+for i = L1NormIndex
+    L1NormClassLabel = trainingDataClassLabel(i);
+end
+
+%Chi-square distance 
+chiIndex = chiSqrDist(trainingWineData, testingWineData);
+normChiIndex = chiSqrDist(normTrainingWineData, normTestingWineData);
+
+chiClassLabel = zeros(1,40);
+normChiClassLabel = zeros(1,40);
+
+for i = chiIndex
+    chiClassLabel = trainingDataClassLabel(i);
+end
+for i = normChiIndex
+    normChiClassLabel = trainingDataClassLabel(i);
 end
 
 %Correlation distance
-correlationIndex = knnsearch(trainingWineData, testingWineData, 'Distance', 'cityblock');
-L1ClassLabel = zeros(1,40);
-for i = L1index
-    L1ClassLabel = trainingDataClassLabel(i);
+correlationIndex = knnsearch(trainingWineData, testingWineData, 'Distance', 'correlation');
+normCorrelationIndex = knnsearch(normTrainingWineData, normTestingWineData, 'Distance', 'correlation');
+
+correlationClassLabel = zeros(1,40);
+normCorrelationClassLabel = zeros(1,40);
+
+for i = correlationIndex
+    correlationClassLabel = trainingDataClassLabel(i);
 end
+for i = normCorrelationIndex
+    normCorrelationClassLabel = trainingDataClassLabel(i);
+end
+
+%Mahalanobis distance
+mahalanobisIndex 
 
