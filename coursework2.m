@@ -37,7 +37,7 @@ trainingDataClassLabel = [ones(1,39), 2*ones(1,47), 3*ones(1,32)];
 validationDataClassLabel = [ones(1,7), 2*ones(1,8), 3*ones(1,5)];
 testingDataClassLabel = [ones(1,13), 2*ones(1,16), 3*ones(1,11)];
 %% Q1)B) wakakakakakaka 
-
+%TODO: this is wrong
 covMatrixAll = cov(wineData);
 covMatrixAllNorm = cov(normWineData);
 
