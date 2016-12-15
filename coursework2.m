@@ -38,15 +38,15 @@ validationDataClassLabel = [ones(1,7), 2*ones(1,8), 3*ones(1,5)];
 testingDataClassLabel = [ones(1,13), 2*ones(1,16), 3*ones(1,11)];
 %% Q1)B) wakakakakakaka 
 
-covMatrixAll = cov(wineData);
-covMatrixAllNorm = cov(normWineData);
+covMatrixAll = cov(trainingWineData);
+covMatrixAllNorm = cov(normTrainingWineData);
 
-covMatrixC1 = cov(wineDataC1);
-covMatrixC2 = cov(wineDataC2);
-covMatrixC3 = cov(wineDataC3);
-covMatrixC1Norm = cov(normWineDataC1);
-covMatrixC2Norm = cov(normWineDataC2);
-covMatrixC3Norm = cov(normWineDataC3);
+covMatrixC1 = cov(trainingWineDataC1);
+covMatrixC2 = cov(trainingWineDataC2);
+covMatrixC3 = cov(trainingWineDataC3);
+covMatrixC1Norm = cov(trainingNormWineDataC1);
+covMatrixC2Norm = cov(trainingNormWineDataC2);
+covMatrixC3Norm = cov(trainingNormWineDataC3);
 
 %% Q1)C)
 
@@ -118,7 +118,7 @@ title('Dimensions with lowest covariance');
 %end
 %scatter (covMatrixC1(1, :), covMatrixC1(2, :));
 
-%%Q1)D)
+%% Q1)D)
 %L2-Euclidean distance
 L2index = knnsearch(trainingWineData, testingWineData);
 L2NormIndex = knnsearch(normTrainingWineData, normTestingWineData);
