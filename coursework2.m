@@ -36,6 +36,14 @@ normTestingWineData = [randNormWineDataC1(47:59,:); randNormWineDataC2(56:71,:);
 trainingDataClassLabel = [ones(1,39), 2*ones(1,47), 3*ones(1,32)];
 validationDataClassLabel = [ones(1,7), 2*ones(1,8), 3*ones(1,5)];
 testingDataClassLabel = [ones(1,13), 2*ones(1,16), 3*ones(1,11)];
+
+trainingWineDataC1 = randWineDataC1(1:39,:);
+trainingWineDataC2 = randWineDataC2(1:47,:);
+trainingWineDataC3 = randWineDataC3(1:32,:);
+trainingNormWineDataC1 = randNormWineDataC1(1:39,:);
+trainingNormWineDataC2 = randNormWineDataC2(1:47,:);
+trainingNormWineDataC3 = randNormWineDataC3(1:32,:);
+
 %% Q1)B) wakakakakakaka 
 
 covMatrixAll = cov(trainingWineData);
@@ -64,40 +72,45 @@ title('Dimensions with largest covariance');
 [V1, D1] = eig(covMatrixC1Norm);
 V1_selected = [V1(5, 13), V1(13, 13)];
 
-p1 = [0.1, 0.99];
+p1 = [0.08, 0.1];
 p2 = p1 + 0.01*V1_selected;
 dp = 0.03*V1_selected;
 %quiver(V1(5, 13), V1(13, 13), 0.1);
-%quiver(p1(1),p1(2),dp(1),dp(2),0, 'b');
+quiver(p1(1),p1(2),dp(1),dp(2),0, 'b');
 
 [V2, D2] = eig(covMatrixC2Norm);
 V2_selected = [V2(5, 13), V2(13, 13)];
 
-p1 = [0.2, 0.97];
-p2 = p1 + 0.01*V2_selected;
-dp = 0.03*V2_selected;
+p1 = [0.07, 0.04];
+p2 = p1 + 0.5*V2_selected;
+dp = 0.1*V2_selected;
 %quiver(V1(5, 13), V1(13, 13), 0.1);
-%quiver(p1(1),p1(2),dp(1),dp(2),0, 'r');
+quiver(p1(1),p1(2),dp(1),dp(2),0, 'r');
 
 [V3, D3] = eig(covMatrixC3Norm);
 V3_selected = [V3(5, 13), V3(13, 13)];
 
-p1 = [0.17, 0.98];
-p2 = p1 + 0.01*V3_selected;
-dp = 0.03*V3_selected;
+p1 = [0.075, 0.06];
+p2 = p1 + 0.5*V3_selected;
+dp = 0.2*V3_selected;
 %quiver(V1(5, 13), V1(13, 13), 0.1);
-%quiver(p1(1),p1(2),dp(1),dp(2),0, 'k');
+quiver(p1(1),p1(2),dp(1),dp(2),0, 'k');
 
 
-legend('Class 1','Class 2','Class 3', 'Class 1 Eigenvector', 'Class 2 Eigenvector', 'Class 3 Eigenvector') ;
+legend('Class 1','Class 2','Class 3', 'Class 1 Principle Component', 'Class 2 Principle Component', 'Class 3 Principle Component') ;
 hold off;
 
-min = 9999999;
-for i = 1:13
-    for j=1:13
-        if min > abs(covMatrixC3(i, j))
-            min = abs(covMatrixC3(i, j));
+minimum = 9999999;
+maximum = 0;
+for i = 1:12
+    for j=i:13
+        if minimum > abs(covMatrixC1(i, j))
+            minimum = abs(covMatrixC1(i, j));
             x_min = i; y_min = j;
+        end
+        if maximum < abs(covMatrixC3(i, j))
+            maximum = abs(covMatrixC3(i, j));
+            x_max = i; y_max = j;
         end
     end
 end
@@ -120,31 +133,29 @@ title('Dimensions with lowest covariance');
 
 %% Q1)D)
 %L2-Euclidean distance
-L2index = knnsearch(trainingWineData, testingWineData);
-L2NormIndex = knnsearch(normTrainingWineData, normTestingWineData);
-
+L2index = knnsearch(normTrainingWineData, normTestingWineData);
 L2ClassLabel = zeros(1,40);
-L2NormClassLabel = zeros(1,40);
-
-for i = L2index
-    L2ClassLabel = trainingDataClassLabel(i);
-end
-for i = L2NormIndex
-    L2NormClassLabel = trainingDataClassLabel(i);
+L2Accurate = zeros(1,40);
+for i = 1:40
+    L2ClassLabel(i) = trainingDataClassLabel(L2index(i));
+    if L2ClassLabel(i) == testingDataClassLabel(i)
+        L2Accurate(i) = 1;
+    else 
+        L2Accurate(i) = 0;
+    end
 end
 
 %L1-CityBlock distance
-L1index = knnsearch(trainingWineData, testingWineData, 'Distance', 'cityblock');
-L1NormIndex = knnsearch(normTrainingWineData, normTestingWineData, 'Distance', 'cityblock');
-
+L1index = knnsearch(normTrainingWineData, normTestingWineData, 'Distance', 'cityblock');
 L1ClassLabel = zeros(1,40);
-L1NormClassLabel = zeros(1,40);
-
-for i = L1index
-    L1ClassLabel = trainingDataClassLabel(i);
-end
-for i = L1NormIndex
-    L1NormClassLabel = trainingDataClassLabel(i);
+L1Accurate = zeros(1,40);
+for i = 1:40
+    L1ClassLabel(i) = trainingDataClassLabel(L1index(i));
+    if L1ClassLabel(i) == testingDataClassLabel(i)
+        L1Accurate(i) = 1;
+    else 
+        L1Accurate(i) = 0;
+    end
 end
 
 %Chi-square distance 
@@ -175,6 +186,31 @@ for i = normCorrelationIndex
     normCorrelationClassLabel = trainingDataClassLabel(i);
 end
 
+%Histogram-intersection
+HIindex = zeros(1, size(normTestingWineData, 2))';
+HIClassLabel = zeros(1,40);
+HIAccurate = zeros(1,40);
+for j = 1:size(normTestingWineData, 1)
+    minDist = histogram_intersection(normTestingWineData(j, :), normTrainingWineData);
+%     for i = 1:size(trainingWineData, 1)
+%         if abs(histogram_intersection(testingWineData(j, :), trainingWineData(i, :))) < minDist
+%             minDist = abs(histogram_intersection(testingWineData(j, :), trainingWineData(i, :)));
+%             HIindex(j) = i;
+%         end
+%     end
+    [~, HIindex(j)] = min(minDist);
+    
+end
+
+for i = 1:40
+    HIClassLabel(i) = trainingDataClassLabel(HIindex(i));
+    if HIClassLabel(i) == testingDataClassLabel(i)
+        HIAccurate(i) = 1;
+    else 
+        HIAccurate(i) = 0;
+    end
+end
+
 %Mahalanobis distance
 mahalanobisIndex = knnsearch(trainingWineData, testingWineData, 'Distance', 'mahalanobis', 'Cov', covMatrixAll);
 mahalanobisClassLabel = zeros(1,40);
@@ -182,5 +218,4 @@ mahalanobisClassLabel = zeros(1,40);
 for i = mahalanobisIndex
     mahalanobisClassLabel = trainingDataClassLabel(i);
 end
-
 
