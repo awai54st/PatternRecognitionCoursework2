@@ -225,11 +225,11 @@ end
 %silhouette(normTrainingWineData,sqeuclidianTrainingIndex);
 sqeuclidianKMeansIndex = sqeuclideanDist(sqeuclidianTrainingClassCentre, normTestingWineData);
 
-% figure;
-% scatter(normTrainingWineData(:,7),normTrainingWineData(:,11));
-% hold on;
-% scatter(sqeuclidianTrainingClassCentre(2,7),sqeuclidianTrainingClassCentre(2,11));
-% hold off;
+figure;
+scatter(normTrainingWineData(:,7),normTrainingWineData(:,11));
+hold on;
+scatter(sqeuclidianTrainingClassCentre(2,7),sqeuclidianTrainingClassCentre(3,11));
+hold off;
 
 % %cityblock
 % [cityblockTrainingIndex, cityblockTrainingClassCentre] = kmeans(normTrainingWineData, 3, 'Distance', 'cityblock'); 
