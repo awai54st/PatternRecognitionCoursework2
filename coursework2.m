@@ -3,6 +3,8 @@ close all;
 clc;
 %% Q1)A) la lalalala lalala
 load wine.data.csv;
+errorMatrix = ones(5, 100);
+for i = 1:100
 classIdentifier = wine_data(:,1);
 wineData = wine_data(:,2:14);
 normWineData = normc(wineData);
@@ -56,190 +58,209 @@ covMatrixC1Norm = cov(trainingNormWineDataC1);
 covMatrixC2Norm = cov(trainingNormWineDataC2);
 covMatrixC3Norm = cov(trainingNormWineDataC3);
 
-%% Q1)C)
-
-figure;
-scatter (normWineDataC1(:, 5), normWineDataC1(:, 13),30, 'b', 'x');
-hold on;
-scatter (normWineDataC2(:, 5), normWineDataC2(:, 13),30, 'r');
-hold on;
-scatter (normWineDataC3(:, 5), normWineDataC3(:, 13),30, 'k', '^');
-hold on;
-xlabel('Dimension 5');
-ylabel('Dimension 13');
-title('Dimensions with largest covariance');
-
-[V1, D1] = eig(covMatrixC1Norm);
-V1_selected = [V1(5, 13), V1(13, 13)];
-
-p1 = [0.08, 0.1];
-p2 = p1 + 0.01*V1_selected;
-dp = 0.03*V1_selected;
-%quiver(V1(5, 13), V1(13, 13), 0.1);
-quiver(p1(1),p1(2),dp(1),dp(2),0, 'b');
-
-[V2, D2] = eig(covMatrixC2Norm);
-V2_selected = [V2(5, 13), V2(13, 13)];
-
-p1 = [0.07, 0.04];
-p2 = p1 + 0.5*V2_selected;
-dp = 0.1*V2_selected;
-%quiver(V1(5, 13), V1(13, 13), 0.1);
-quiver(p1(1),p1(2),dp(1),dp(2),0, 'r');
-
-[V3, D3] = eig(covMatrixC3Norm);
-V3_selected = [V3(5, 13), V3(13, 13)];
-
-p1 = [0.075, 0.06];
-p2 = p1 + 0.5*V3_selected;
-dp = 0.2*V3_selected;
-%quiver(V1(5, 13), V1(13, 13), 0.1);
-quiver(p1(1),p1(2),dp(1),dp(2),0, 'k');
-
-
-legend('Class 1','Class 2','Class 3', 'Class 1 Principle Component', 'Class 2 Principle Component', 'Class 3 Principle Component') ;
-hold off;
-
-minimum = 9999999;
-maximum = 0;
-for i = 1:12
-    for j=i:13
-        if minimum > abs(covMatrixC1(i, j))
-            minimum = abs(covMatrixC1(i, j));
-            x_min = i; y_min = j;
-        end
-        if maximum < abs(covMatrixC3(i, j))
-            maximum = abs(covMatrixC3(i, j));
-            x_max = i; y_max = j;
-        end
-    end
-end
-
-
-figure;
-scatter (normWineDataC1(:, 7), normWineDataC1(:, 11));
-hold on;
-scatter (normWineDataC2(:, 7), normWineDataC2(:, 11));
-hold on;
-scatter (normWineDataC3(:, 7), normWineDataC3(:, 11));
-hold off;
-legend('Class 1','Class 2','Class 3') ;
-xlabel('Dimension 7');
-ylabel('Dimension 11');
-title('Dimensions with lowest covariance');
-
-%end
-%scatter (covMatrixC1(1, :), covMatrixC1(2, :));
-
-%% Q1)D)
-%L2-Euclidean distance
-L2index = knnsearch(normTrainingWineData, normTestingWineData);
-L2ClassLabel = zeros(1,40);
-L2Accurate = zeros(1,40);
-for i = 1:40
-    L2ClassLabel(i) = trainingDataClassLabel(L2index(i));
-    if L2ClassLabel(i) == testingDataClassLabel(i)
-        L2Accurate(i) = 1;
-    else 
-        L2Accurate(i) = 0;
-    end
-end
-
-%L1-CityBlock distance
-L1index = knnsearch(normTrainingWineData, normTestingWineData, 'Distance', 'cityblock');
-L1ClassLabel = zeros(1,40);
-L1Accurate = zeros(1,40);
-for i = 1:40
-    L1ClassLabel(i) = trainingDataClassLabel(L1index(i));
-    if L1ClassLabel(i) == testingDataClassLabel(i)
-        L1Accurate(i) = 1;
-    else 
-        L1Accurate(i) = 0;
-    end
-end
-
-%Chi-square distance 
-chiIndex = chiSqrDist(trainingWineData, testingWineData);
-normChiIndex = chiSqrDist(normTrainingWineData, normTestingWineData);
-
-chiClassLabel = zeros(1,40);
-normChiClassLabel = zeros(1,40);
-
-for i = chiIndex
-    chiClassLabel = trainingDataClassLabel(i);
-end
-for i = normChiIndex
-    normChiClassLabel = trainingDataClassLabel(i);
-end
-
-%Correlation distance
-correlationIndex = knnsearch(trainingWineData, testingWineData, 'Distance', 'correlation');
-normCorrelationIndex = knnsearch(normTrainingWineData, normTestingWineData, 'Distance', 'correlation');
-
-correlationClassLabel = zeros(1,40);
-normCorrelationClassLabel = zeros(1,40);
-
-for i = correlationIndex
-    correlationClassLabel = trainingDataClassLabel(i);
-end
-for i = normCorrelationIndex
-    normCorrelationClassLabel = trainingDataClassLabel(i);
-end
-
-%Histogram-intersection
-% HIindex = zeros(1, size(normTestingWineData, 2))';
-% HIClassLabel = zeros(1,40);
-% HIAccurate = zeros(1,40);
-% for j = 1:size(normTestingWineData, 1)
-%     minDist = histogram_intersection(normTestingWineData(j, :), normTrainingWineData);
-% %     for i = 1:size(trainingWineData, 1)
-% %         if abs(histogram_intersection(testingWineData(j, :), trainingWineData(i, :))) < minDist
-% %             minDist = abs(histogram_intersection(testingWineData(j, :), trainingWineData(i, :)));
-% %             HIindex(j) = i;
-% %         end
-% %     end
-%     [~, HIindex(j)] = min(minDist);
-%     
-% end
+% %% Q1)C)
 % 
-% for i = 1:40
-%     HIClassLabel(i) = trainingDataClassLabel(HIindex(i));
-%     if HIClassLabel(i) == testingDataClassLabel(i)
-%         HIAccurate(i) = 1;
-%     else 
-%         HIAccurate(i) = 0;
+% figure;
+% scatter (normWineDataC1(:, 5), normWineDataC1(:, 13),30, 'b', 'x');
+% hold on;
+% scatter (normWineDataC2(:, 5), normWineDataC2(:, 13),30, 'r');
+% hold on;
+% scatter (normWineDataC3(:, 5), normWineDataC3(:, 13),30, 'k', '^');
+% hold on;
+% xlabel('Dimension 5');
+% ylabel('Dimension 13');
+% title('Dimensions with largest covariance');
+% 
+% [V1, D1] = eig(covMatrixC1Norm);
+% V1_selected = [V1(5, 13), V1(13, 13)];
+% 
+% p1 = [0.08, 0.1];
+% p2 = p1 + 0.01*V1_selected;
+% dp = 0.03*V1_selected;
+% %quiver(V1(5, 13), V1(13, 13), 0.1);
+% quiver(p1(1),p1(2),dp(1),dp(2),0, 'b');
+% 
+% [V2, D2] = eig(covMatrixC2Norm);
+% V2_selected = [V2(5, 13), V2(13, 13)];
+% 
+% p1 = [0.07, 0.04];
+% p2 = p1 + 0.5*V2_selected;
+% dp = 0.1*V2_selected;
+% %quiver(V1(5, 13), V1(13, 13), 0.1);
+% quiver(p1(1),p1(2),dp(1),dp(2),0, 'r');
+% 
+% [V3, D3] = eig(covMatrixC3Norm);
+% V3_selected = [V3(5, 13), V3(13, 13)];
+% 
+% p1 = [0.075, 0.06];
+% p2 = p1 + 0.5*V3_selected;
+% dp = 0.2*V3_selected;
+% %quiver(V1(5, 13), V1(13, 13), 0.1);
+% quiver(p1(1),p1(2),dp(1),dp(2),0, 'k');
+% 
+% 
+% legend('Class 1','Class 2','Class 3', 'Class 1 Principle Component', 'Class 2 Principle Component', 'Class 3 Principle Component') ;
+% hold off;
+% 
+% minimum = 9999999;
+% maximum = 0;
+% for i = 1:12
+%     for j=i:13
+%         if minimum > abs(covMatrixC1(i, j))
+%             minimum = abs(covMatrixC1(i, j));
+%             x_min = i; y_min = j;
+%         end
+%         if maximum < abs(covMatrixC3(i, j))
+%             maximum = abs(covMatrixC3(i, j));
+%             x_max = i; y_max = j;
+%         end
 %     end
 % end
-
-%Mahalanobis distance
-mahalanobisIndex = knnsearch(trainingWineData, testingWineData, 'Distance', 'mahalanobis', 'Cov', covMatrixAll);
-mahalanobisClassLabel = zeros(1,40);
-
-for i = mahalanobisIndex
-    mahalanobisClassLabel = trainingDataClassLabel(i);
-end
+% 
+% 
+% figure;
+% scatter (normWineDataC1(:, 7), normWineDataC1(:, 11));
+% hold on;
+% scatter (normWineDataC2(:, 7), normWineDataC2(:, 11));
+% hold on;
+% scatter (normWineDataC3(:, 7), normWineDataC3(:, 11));
+% hold off;
+% legend('Class 1','Class 2','Class 3') ;
+% xlabel('Dimension 7');
+% ylabel('Dimension 11');
+% title('Dimensions with lowest covariance');
+% 
+% %end
+% %scatter (covMatrixC1(1, :), covMatrixC1(2, :));
+% 
+% %% Q1)D)
+% %L2-Euclidean distance
+% L2index = knnsearch(normTrainingWineData, normTestingWineData);
+% L2ClassLabel = zeros(1,40);
+% L2Accurate = zeros(1,40);
+% for i = 1:40
+%     L2ClassLabel(i) = trainingDataClassLabel(L2index(i));
+%     if L2ClassLabel(i) == testingDataClassLabel(i)
+%         L2Accurate(i) = 1;
+%     else 
+%         L2Accurate(i) = 0;
+%     end
+% end
+% 
+% %L1-CityBlock distance
+% L1index = knnsearch(normTrainingWineData, normTestingWineData, 'Distance', 'cityblock');
+% L1ClassLabel = zeros(1,40);
+% L1Accurate = zeros(1,40);
+% for i = 1:40
+%     L1ClassLabel(i) = trainingDataClassLabel(L1index(i));
+%     if L1ClassLabel(i) == testingDataClassLabel(i)
+%         L1Accurate(i) = 1;
+%     else 
+%         L1Accurate(i) = 0;
+%     end
+% end
+% 
+% %Chi-square distance 
+% chiIndex = chiSqrDist(trainingWineData, testingWineData);
+% normChiIndex = chiSqrDist(normTrainingWineData, normTestingWineData);
+% 
+% chiClassLabel = zeros(1,40);
+% normChiClassLabel = zeros(1,40);
+% 
+% for i = chiIndex
+%     chiClassLabel = trainingDataClassLabel(i);
+% end
+% for i = normChiIndex
+%     normChiClassLabel = trainingDataClassLabel(i);
+% end
+% 
+% %Correlation distance
+% correlationIndex = knnsearch(trainingWineData, testingWineData, 'Distance', 'correlation');
+% normCorrelationIndex = knnsearch(normTrainingWineData, normTestingWineData, 'Distance', 'correlation');
+% 
+% correlationClassLabel = zeros(1,40);
+% normCorrelationClassLabel = zeros(1,40);
+% 
+% for i = correlationIndex
+%     correlationClassLabel = trainingDataClassLabel(i);
+% end
+% for i = normCorrelationIndex
+%     normCorrelationClassLabel = trainingDataClassLabel(i);
+% end
+% 
+% %Histogram-intersection
+% % HIindex = zeros(1, size(normTestingWineData, 2))';
+% % HIClassLabel = zeros(1,40);
+% % HIAccurate = zeros(1,40);
+% % for j = 1:size(normTestingWineData, 1)
+% %     minDist = histogram_intersection(normTestingWineData(j, :), normTrainingWineData);
+% % %     for i = 1:size(trainingWineData, 1)
+% % %         if abs(histogram_intersection(testingWineData(j, :), trainingWineData(i, :))) < minDist
+% % %             minDist = abs(histogram_intersection(testingWineData(j, :), trainingWineData(i, :)));
+% % %             HIindex(j) = i;
+% % %         end
+% % %     end
+% %     [~, HIindex(j)] = min(minDist);
+% %     
+% % end
+% % 
+% % for i = 1:40
+% %     HIClassLabel(i) = trainingDataClassLabel(HIindex(i));
+% %     if HIClassLabel(i) == testingDataClassLabel(i)
+% %         HIAccurate(i) = 1;
+% %     else 
+% %         HIAccurate(i) = 0;
+% %     end
+% % end
+% 
+% %Mahalanobis distance
+% mahalanobisIndex = knnsearch(trainingWineData, testingWineData, 'Distance', 'mahalanobis', 'Cov', covMatrixAll);
+% mahalanobisClassLabel = zeros(1,40);
+% 
+% for i = mahalanobisIndex
+%     mahalanobisClassLabel = trainingDataClassLabel(i);
+% end
 
 %% Q2) Kmeans clustering
-%Sqeuclidian
-[sqeuclidianTrainingIndex, sqeuclidianTrainingClassCentre] = kmeans(normTrainingWineData, 3, 'Replicate', 100);
-%silhouette(normTrainingWineData,sqeuclidianTrainingIndex);
-sqeuclidianKMeansIndex = sqeuclideanDist(sqeuclidianTrainingClassCentre, normTestingWineData);
+    %Sqeuclidian
+    [sqeuclidianTrainingIndex, sqeuclidianTrainingClassCentre] = kmeans(normTrainingWineData, 3, 'Replicate', 100);
+    sqAlignedTrainingClassCentre = alignClassCentre(sqeuclidianTrainingIndex, sqeuclidianTrainingClassCentre, 3); 
+    %silhouette(normTrainingWineData,sqeuclidianTrainingIndex);
+    sqeuclidianKMeansIndex = sqeuclideanDist(sqAlignedTrainingClassCentre, normTestingWineData);
+    sqeuclidianErr = classificationErr(sqeuclidianKMeansIndex, 3);
+    errorMatrix(1, i) = sqeuclidianErr;
+    % figure;
+    % scatter(normTrainingWineData(:,7),normTrainingWineData(:,11));
+    % hold on;
+    % scatter(sqeuclidianTrainingClassCentre(2,7),sqeuclidianTrainingClassCentre(2,11));
+    % hold off;
 
-% figure;
-% scatter(normTrainingWineData(:,7),normTrainingWineData(:,11));
-% hold on;
-% scatter(sqeuclidianTrainingClassCentre(2,7),sqeuclidianTrainingClassCentre(2,11));
-% hold off;
+    % %cityblock
+    [cityblockTrainingIndex, cityblockTrainingClassCentre] = kmeans(normTrainingWineData, 3, 'Replicate', 100); 
+    cityAlignedTrainingClassCentre = alignClassCentre(cityblockTrainingIndex, cityblockTrainingClassCentre, 3); 
+    cityblockKMeansIndex = knnsearch(cityAlignedTrainingClassCentre, normTestingWineData, 'Distance', 'cityblock');
+    cityblockErr = classificationErr(cityblockKMeansIndex, 3);
+    errorMatrix(2, i) = cityblockErr;
 
-% %cityblock
-% [cityblockTrainingIndex, cityblockTrainingClassCentre] = kmeans(normTrainingWineData, 3, 'Distance', 'cityblock'); 
-% cityblockKMeansIndex = knnsearch(cityblockTrainingClassCentre, normTestingWineData, 'Distance', 'cityblock');
-% 
-% %Cosine
-% [cosineTrainingIndex, cosineTrainingClassCentre] = kmeans(normTrainingWineData, 3, 'Distance', 'cosine'); 
-% cosineKMeansIndex = knnsearch(cosineTrainingClassCentre, normTestingWineData, 'Distance', 'cosine');
-% 
-% %Correlation
-% [correlationTrainingIndex, correlationTrainingClassCentre] = kmeans(normTrainingWineData, 3, 'Distance', 'correlation'); 
-% correlationKMeansIndex = knnsearch(correlationTrainingClassCentre, normTestingWineData, 'Distance', 'correlation');
+    %Cosine
+    [cosineTrainingIndex, cosineTrainingClassCentre] = kmeans(normTrainingWineData, 3, 'Replicate', 100); 
+    cosAlignedTrainingClassCentre = alignClassCentre(cosineTrainingIndex, cosineTrainingClassCentre, 3); 
+    cosineKMeansIndex = knnsearch(cosAlignedTrainingClassCentre, normTestingWineData, 'Distance', 'cosine');
+    cosineErr = classificationErr(cosineKMeansIndex, 3);
+    errorMatrix(3, i) = cosineErr;
 
+    %Correlation
+    [correlationTrainingIndex, correlationTrainingClassCentre] = kmeans(normTrainingWineData, 3, 'Replicate', 100); 
+    corrAlignedTrainingClassCentre = alignClassCentre(correlationTrainingIndex, correlationTrainingClassCentre, 3); 
+    correlationKMeansIndex = knnsearch(corrAlignedTrainingClassCentre, normTestingWineData, 'Distance', 'correlation');
+    correlationErr = classificationErr(correlationKMeansIndex, 3);
+    errorMatrix(4, i) = correlationErr; 
+    
+    %Mahalanobias
+    [mahalanobisTrainingIndex, mahalanobisTrainingClassCentre] = kmeans(normTrainingWineData, 3, 'Replicate', 100); 
+    maAlignedTrainingClassCentre = alignClassCentre(mahalanobisTrainingIndex, mahalanobisTrainingClassCentre, 3); 
+    mahalanobisKMeansIndex = knnsearch(maAlignedTrainingClassCentre, normTestingWineData, 'Distance', 'mahalanobis', 'Cov', covMatrixAllNorm);
+    mahalanobisErr = classificationErr(mahalanobisKMeansIndex, 3);
+    errorMatrix(5, i) = mahalanobisErr; 
+end
+    meanErrorMatrix = mean(errorMatrix,2);
