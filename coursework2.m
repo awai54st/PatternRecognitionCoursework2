@@ -4,7 +4,7 @@ clc;
 %% Q1)A) la lalalala lalala
 load wine.data.csv;
 errorMatrix = ones(5, 100);
-for i = 1:100
+for i = 100:100
 classIdentifier = wine_data(:,1);
 wineData = wine_data(:,2:14);
 normWineData = normc(wineData);
@@ -236,21 +236,21 @@ covMatrixC3Norm = cov(trainingNormWineDataC3);
     % hold off;
 
     % %cityblock
-    [cityblockTrainingIndex, cityblockTrainingClassCentre] = kmeans(normTrainingWineData, 3, 'Replicate', 100); 
+    [cityblockTrainingIndex, cityblockTrainingClassCentre] = kmeans(normTrainingWineData, 3, 'Replicate', 100, 'Distance', 'cityblock'); 
     cityAlignedTrainingClassCentre = alignClassCentre(cityblockTrainingIndex, cityblockTrainingClassCentre, 3); 
     cityblockKMeansIndex = knnsearch(cityAlignedTrainingClassCentre, normTestingWineData, 'Distance', 'cityblock');
     cityblockErr = classificationErr(cityblockKMeansIndex, 3);
     errorMatrix(2, i) = cityblockErr;
 
     %Cosine
-    [cosineTrainingIndex, cosineTrainingClassCentre] = kmeans(normTrainingWineData, 3, 'Replicate', 100); 
+    [cosineTrainingIndex, cosineTrainingClassCentre] = kmeans(normTrainingWineData, 3, 'Replicate', 100, 'Distance', 'cityblock'); 
     cosAlignedTrainingClassCentre = alignClassCentre(cosineTrainingIndex, cosineTrainingClassCentre, 3); 
     cosineKMeansIndex = knnsearch(cosAlignedTrainingClassCentre, normTestingWineData, 'Distance', 'cosine');
     cosineErr = classificationErr(cosineKMeansIndex, 3);
     errorMatrix(3, i) = cosineErr;
 
     %Correlation
-    [correlationTrainingIndex, correlationTrainingClassCentre] = kmeans(normTrainingWineData, 3, 'Replicate', 100); 
+    [correlationTrainingIndex, correlationTrainingClassCentre] = kmeans(normTrainingWineData, 3, 'Replicate', 100, 'Distance', 'cityblock'); 
     corrAlignedTrainingClassCentre = alignClassCentre(correlationTrainingIndex, correlationTrainingClassCentre, 3); 
     correlationKMeansIndex = knnsearch(corrAlignedTrainingClassCentre, normTestingWineData, 'Distance', 'correlation');
     correlationErr = classificationErr(correlationKMeansIndex, 3);
@@ -263,4 +263,7 @@ covMatrixC3Norm = cov(trainingNormWineDataC3);
     mahalanobisErr = classificationErr(mahalanobisKMeansIndex, 3);
     errorMatrix(5, i) = mahalanobisErr; 
 end
-    meanErrorMatrix = mean(errorMatrix,2);
+meanErrorMatrix = mean(errorMatrix,2);
+
+%Draw training data clustering 
+DrawKmeansClustering(normTrainingWineData, randNormWineDataC1, randNormWineDataC2, randNormWineDataC3, sqeuclidianTrainingIndex, sqAlignedTrainingClassCentre, cityblockTrainingIndex, cityAlignedTrainingClassCentre, cosineTrainingIndex, cosAlignedTrainingClassCentre, correlationTrainingIndex, corrAlignedTrainingClassCentre);
