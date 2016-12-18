@@ -223,7 +223,9 @@ covMatrixC3Norm = cov(trainingNormWineDataC3);
 
 %% Q2) Kmeans clustering
     %Sqeuclidian
+    tic;
     [sqeuclidianTrainingIndex, sqeuclidianTrainingClassCentre] = kmeans(normTrainingWineData, 3, 'Replicate', 100);
+    sqTime = toc;
     sqAlignedTrainingClassCentre = alignClassCentre(sqeuclidianTrainingIndex, sqeuclidianTrainingClassCentre, 3); 
     %silhouette(normTrainingWineData,sqeuclidianTrainingIndex);
     sqeuclidianKMeansIndex = sqeuclideanDist(sqAlignedTrainingClassCentre, normTestingWineData);
@@ -236,21 +238,27 @@ covMatrixC3Norm = cov(trainingNormWineDataC3);
     % hold off;
 
     % %cityblock
+    tic;
     [cityblockTrainingIndex, cityblockTrainingClassCentre] = kmeans(normTrainingWineData, 3, 'Replicate', 100, 'Distance', 'cityblock'); 
+    cityTime = toc;
     cityAlignedTrainingClassCentre = alignClassCentre(cityblockTrainingIndex, cityblockTrainingClassCentre, 3); 
     cityblockKMeansIndex = knnsearch(cityAlignedTrainingClassCentre, normTestingWineData, 'Distance', 'cityblock');
     cityblockErr = classificationErr(cityblockKMeansIndex, 3);
     errorMatrix(2, i) = cityblockErr;
 
     %Cosine
-    [cosineTrainingIndex, cosineTrainingClassCentre] = kmeans(normTrainingWineData, 3, 'Replicate', 100, 'Distance', 'cityblock'); 
+    tic;
+    [cosineTrainingIndex, cosineTrainingClassCentre] = kmeans(normTrainingWineData, 3, 'Replicate', 100, 'Distance', 'cosine'); 
+    cosTime = toc;
     cosAlignedTrainingClassCentre = alignClassCentre(cosineTrainingIndex, cosineTrainingClassCentre, 3); 
     cosineKMeansIndex = knnsearch(cosAlignedTrainingClassCentre, normTestingWineData, 'Distance', 'cosine');
     cosineErr = classificationErr(cosineKMeansIndex, 3);
     errorMatrix(3, i) = cosineErr;
 
     %Correlation
-    [correlationTrainingIndex, correlationTrainingClassCentre] = kmeans(normTrainingWineData, 3, 'Replicate', 100, 'Distance', 'cityblock'); 
+    tic;
+    [correlationTrainingIndex, correlationTrainingClassCentre] = kmeans(normTrainingWineData, 3, 'Replicate', 100, 'Distance', 'correlation'); 
+    corrTime = toc;
     corrAlignedTrainingClassCentre = alignClassCentre(correlationTrainingIndex, correlationTrainingClassCentre, 3); 
     correlationKMeansIndex = knnsearch(corrAlignedTrainingClassCentre, normTestingWineData, 'Distance', 'correlation');
     correlationErr = classificationErr(correlationKMeansIndex, 3);
