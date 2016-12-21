@@ -273,6 +273,9 @@ covMatrixC3Norm = cov(trainingNormWineDataC3);
 end
 meanErrorMatrix = mean(errorMatrix,2);
 
+enumErrorMatrices = [0.078,0.06525,0.10475
+,0.112
+0.03475;];
 
 %Draw training data clustering 
 %DrawKmeansClustering(normTrainingWineData, randNormWineDataC1, randNormWineDataC2, randNormWineDataC3, sqeuclidianTrainingIndex, sqAlignedTrainingClassCentre, cityblockTrainingIndex, cityAlignedTrainingClassCentre, cosineTrainingIndex, cosAlignedTrainingClassCentre, correlationTrainingIndex, corrAlignedTrainingClassCentre);
