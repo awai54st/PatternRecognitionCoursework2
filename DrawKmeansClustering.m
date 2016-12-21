@@ -1,4 +1,4 @@
-function DrawKmeansClustering(normTrainingWineData, randNormWineDataC1, randNormWineDataC2, randNormWineDataC3, sqeuclidianTrainingIndex, sqAlignedTrainingClassCentre, cityblockTrainingIndex, cityAlignedTrainingClassCentre, cosineTrainingIndex, cosAlignedTrainingClassCentre, correlationTrainingIndex, corrAlignedTrainingClassCentre)
+function DrawKmeansClustering(normTrainingWineData, randNormWineDataC1, randNormWineDataC2, randNormWineDataC3, sqeuclidianTrainingIndex, sqTrainingClassCentre, cityblockTrainingIndex, cityTrainingClassCentre, cosineTrainingIndex, cosTrainingClassCentre, correlationTrainingIndex, corrTrainingClassCentre,  mahalanobisTrainingIndex, mahalanobisTrainingClassCentre)
     %Draw Kmeans clustered training data
     KmeansTrainingDataC1 = zeros(1,13);
     KmeansTrainingDataC2 = zeros(1,13);
@@ -32,11 +32,11 @@ function DrawKmeansClustering(normTrainingWineData, randNormWineDataC1, randNorm
     hold on;
     scatter (KmeansTrainingDataC3(:, 7), KmeansTrainingDataC3(:, 11));
     hold on;
-    scatter (sqAlignedTrainingClassCentre(1,7), sqAlignedTrainingClassCentre(1,11));
+    scatter (sqTrainingClassCentre(1,7), sqTrainingClassCentre(1,11));
     hold on;
-    scatter (sqAlignedTrainingClassCentre(2,7), sqAlignedTrainingClassCentre(2,11));
+    scatter (sqTrainingClassCentre(2,7), sqTrainingClassCentre(2,11));
     hold on;
-    scatter (sqAlignedTrainingClassCentre(3,7), sqAlignedTrainingClassCentre(3,11));
+    scatter (sqTrainingClassCentre(3,7), sqTrainingClassCentre(3,11));
     hold off;
     legend('Class 1','Class 2','Class 3', 'Class1Centre', 'Class2Centre', 'Class3Centre') ;
     xlabel('Dimension 7');
@@ -76,11 +76,11 @@ function DrawKmeansClustering(normTrainingWineData, randNormWineDataC1, randNorm
     hold on;
     scatter (KmeansTrainingDataC3(:, 7), KmeansTrainingDataC3(:, 11));
     hold on;
-    scatter (cityAlignedTrainingClassCentre(1,7), cityAlignedTrainingClassCentre(1,11));
+    scatter (cityTrainingClassCentre(1,7), cityTrainingClassCentre(1,11));
     hold on;
-    scatter (cityAlignedTrainingClassCentre(2,7), cityAlignedTrainingClassCentre(2,11));
+    scatter (cityTrainingClassCentre(2,7), cityTrainingClassCentre(2,11));
     hold on;
-    scatter (cityAlignedTrainingClassCentre(3,7), cityAlignedTrainingClassCentre(3,11));
+    scatter (cityTrainingClassCentre(3,7), cityTrainingClassCentre(3,11));
     hold off;
     legend('Class 1','Class 2','Class 3', 'Class1Centre', 'Class2Centre', 'Class3Centre') ;
     xlabel('Dimension 7');
@@ -120,11 +120,11 @@ function DrawKmeansClustering(normTrainingWineData, randNormWineDataC1, randNorm
     hold on;
     scatter (KmeansTrainingDataC3(:, 7), KmeansTrainingDataC3(:, 11));
     hold on;
-    scatter (cosAlignedTrainingClassCentre(1,7), cosAlignedTrainingClassCentre(1,11));
+    scatter (cosTrainingClassCentre(1,7), cosTrainingClassCentre(1,11));
     hold on;
-    scatter (cosAlignedTrainingClassCentre(2,7), cosAlignedTrainingClassCentre(2,11));
+    scatter (cosTrainingClassCentre(2,7), cosTrainingClassCentre(2,11));
     hold on;
-    scatter (cosAlignedTrainingClassCentre(3,7), cosAlignedTrainingClassCentre(3,11));
+    scatter (cosTrainingClassCentre(3,7), cosTrainingClassCentre(3,11));
     hold off;
     legend('Class 1','Class 2','Class 3', 'Class1Centre', 'Class2Centre', 'Class3Centre') ;
     xlabel('Dimension 7');
@@ -164,11 +164,11 @@ function DrawKmeansClustering(normTrainingWineData, randNormWineDataC1, randNorm
     hold on;
     scatter (KmeansTrainingDataC3(:, 7), KmeansTrainingDataC3(:, 11));
     hold on;
-    scatter (corrAlignedTrainingClassCentre(1,7), corrAlignedTrainingClassCentre(1,11));
+    scatter (corrTrainingClassCentre(1,7), corrTrainingClassCentre(1,11));
     hold on;
-    scatter (corrAlignedTrainingClassCentre(2,7), corrAlignedTrainingClassCentre(2,11));
+    scatter (corrTrainingClassCentre(2,7), corrTrainingClassCentre(2,11));
     hold on;
-    scatter (corrAlignedTrainingClassCentre(3,7), corrAlignedTrainingClassCentre(3,11));
+    scatter (corrTrainingClassCentre(3,7), corrTrainingClassCentre(3,11));
     hold off;
     legend('Class 1','Class 2','Class 3', 'Class1Centre', 'Class2Centre', 'Class3Centre') ;
     xlabel('Dimension 7');
@@ -187,4 +187,48 @@ function DrawKmeansClustering(normTrainingWineData, randNormWineDataC1, randNorm
     xlabel('Dimension 7');
     ylabel('Dimension 11');
     title('Actual Training Data Clustering');
+    
+    %Draw Kmeans clustered training data mahalanobisTrainingIndex
+    KmeansTrainingDataC1 = zeros(1,13);
+    KmeansTrainingDataC2 = zeros(1,13);
+    KmeansTrainingDataC3 = zeros(1,13);
+    for j = 1:size(mahalanobisTrainingIndex,1)
+        if mahalanobisTrainingIndex(j) == 1
+            if all(KmeansTrainingDataC1) == 0
+                KmeansTrainingDataC1 = normTrainingWineData(j,:);
+            else
+                KmeansTrainingDataC1 = [KmeansTrainingDataC1; normTrainingWineData(j,:)];
+            end
+        elseif mahalanobisTrainingIndex(j) == 2
+            if all(KmeansTrainingDataC2) == 0
+                KmeansTrainingDataC2 = normTrainingWineData(j,:);
+            else
+                KmeansTrainingDataC2 = [KmeansTrainingDataC2; normTrainingWineData(j,:)];
+            end
+        elseif mahalanobisTrainingIndex(j) == 3
+            if all(KmeansTrainingDataC3) == 0
+                KmeansTrainingDataC3 = normTrainingWineData(j,:);
+            else
+                KmeansTrainingDataC3 = [KmeansTrainingDataC3; normTrainingWineData(j,:)];
+            end
+        end
+    end
+    
+    figure;
+    scatter (KmeansTrainingDataC1(:, 7), KmeansTrainingDataC1(:, 11));
+    hold on;
+    scatter (KmeansTrainingDataC2(:, 7), KmeansTrainingDataC2(:, 11));
+    hold on;
+    scatter (KmeansTrainingDataC3(:, 7), KmeansTrainingDataC3(:, 11));
+    hold on;
+    scatter (mahalanobisTrainingClassCentre(1,7), mahalanobisTrainingClassCentre(1,11));
+    hold on;
+    scatter (mahalanobisTrainingClassCentre(2,7), mahalanobisTrainingClassCentre(2,11));
+    hold on;
+    scatter (mahalanobisTrainingClassCentre(3,7), mahalanobisTrainingClassCentre(3,11));
+    hold off;
+    legend('Class 1','Class 2','Class 3', 'Class1Centre', 'Class2Centre', 'Class3Centre') ;
+    xlabel('Dimension 7');
+    ylabel('Dimension 11');
+    title('Kmeans Training Data Clustering on mahalanobis');
 end
