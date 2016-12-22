@@ -221,7 +221,7 @@ covMatrixC3Norm = cov(trainingNormWineDataC3);
 %     mahalanobisClassLabel = trainingDataClassLabel(i);
 % end
 
-%% Q2) Kmeans clustering
+%% Q2) Kmeans clustering k = 3
     %Sqeuclidian
     tic;
     [sqeuclidianTrainingIndex, sqeuclidianTrainingClassCentre] = kmeans(normTrainingWineData, 3, 'Replicate', 100);

@@ -35,10 +35,10 @@ title('KNN Classification based on Correlation Metric for Kmeans');
 set(gca,'xticklabel', xLabel); 
 ylabel('Classification Error/per cent');
 
-errMatrix = [0.0757500000000000;0.0685000000000000;0.109750000000000;0.105750000000000;0];
+errMatrix = [12.5000,7.6250,13.1250,13.1250,12.2500];
 figure;
 bar(errMatrix')
-title('KNN Classification based on corresponding metrics for Kmeans');
+title('KNN Classification based on corresponding metrics for Kmeans,K=10');
 set(gca,'xticklabel', xLabel); 
 ylabel('Classification Error/per cent');
 
