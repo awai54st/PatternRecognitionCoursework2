@@ -63,10 +63,9 @@ covMatrixC3Norm = cov(trainingNormWineDataC3);
 %% Q2) Kmeans clustering
     %Sqeuclidian
     [sqeuclidianTrainingIndex10, sqeuclidianTrainingClassCentre10] = kmeans(normTrainingWineData, 10, 'Replicate', 100);
-    [sqeuclidianTrainingIndex3, sqeuclidianTrainingClassCentre3] = kmeans(sqeuclidianTrainingClassCentre10, 3, 'Replicate', 100);
     %silhouette(normTrainingWineData,sqeuclidianTrainingIndex);
     sqeuclidianKMeansIndex10 = sqeuclideanDist(sqeuclidianTrainingClassCentre10, normTestingWineData);
-    sqeuclidianKMeansIndex = LookupKMeansIndex(sqeuclidianTrainingIndex3, sqeuclidianKMeansIndex10);
+    sqeuclidianKMeansIndex = LookupKMeansIndex(sqeuclidianTrainingIndex10, sqeuclidianKMeansIndex10, trainingDataClassLabel, 10);
     sqeuclidianErr = classificationErr(sqeuclidianKMeansIndex, 3);
     errorMatrix(1, i) = sqeuclidianErr;
     % figure;
@@ -77,25 +76,22 @@ covMatrixC3Norm = cov(trainingNormWineDataC3);
 
     % %cityblock
     [cityblockTrainingIndex10, cityblockTrainingClassCentre10] = kmeans(normTrainingWineData, 10, 'Replicate', 100, 'Distance', 'cityblock'); 
-    [cityblockTrainingIndex3, cityblockTrainingClassCentre3] = kmeans(cityblockTrainingClassCentre10, 3, 'Replicate', 100, 'Distance', 'cityblock');
     cityblockKMeansIndex10 = knnsearch(cityblockTrainingClassCentre10, normTestingWineData, 'Distance', 'cityblock');
-    cityblockKMeansIndex = LookupKMeansIndex(cityblockTrainingIndex3, cityblockKMeansIndex10);
+    cityblockKMeansIndex = LookupKMeansIndex(cityblockTrainingIndex10, cityblockKMeansIndex10, trainingDataClassLabel, 10);
     cityblockErr = classificationErr(cityblockKMeansIndex, 3);
     errorMatrix(2, i) = cityblockErr;
 
     %Cosine
     [cosineTrainingIndex10, cosineTrainingClassCentre10] = kmeans(normTrainingWineData, 10, 'Replicate', 100, 'Distance', 'cosine');
-    [cosineTrainingIndex3, cosineTrainingClassCentre3] = kmeans(cosineTrainingClassCentre10, 3, 'Replicate', 100, 'Distance', 'cosine'); 
     cosineKMeansIndex10 = knnsearch(cosineTrainingClassCentre10, normTestingWineData, 'Distance', 'cosine');
-    cosineKMeansIndex = LookupKMeansIndex(cosineTrainingIndex3, cosineKMeansIndex10);
+    cosineKMeansIndex = LookupKMeansIndex(cosineTrainingIndex10, cosineKMeansIndex10, trainingDataClassLabel, 10);
     cosineErr = classificationErr(cosineKMeansIndex, 3);
     errorMatrix(3, i) = cosineErr;
 
     %Correlation
     [correlationTrainingIndex10, correlationTrainingClassCentre10] = kmeans(normTrainingWineData, 10, 'Replicate', 100, 'Distance', 'correlation'); 
-    [correlationTrainingIndex3, correlationTrainingClassCentre3] = kmeans(correlationTrainingClassCentre10, 3, 'Replicate', 100, 'Distance', 'correlation'); 
     correlationKMeansIndex10 = knnsearch(correlationTrainingClassCentre10, normTestingWineData, 'Distance', 'correlation');
-    correlationKMeansIndex = LookupKMeansIndex(cosineTrainingIndex3, cosineKMeansIndex10);
+    correlationKMeansIndex = LookupKMeansIndex(correlationTrainingIndex10, correlationKMeansIndex10, trainingDataClassLabel, 10);
     correlationErr = classificationErr(correlationKMeansIndex, 3);
     errorMatrix(4, i) = correlationErr; 
      
@@ -103,9 +99,8 @@ covMatrixC3Norm = cov(trainingNormWineDataC3);
     upperTriag = chol(covMatrixAllNorm);
     transformedTrainingWineData = normTrainingWineData * upperTriag;
     [mahalanobisTrainingIndex10, mahalanobisTrainingClassCentre10] = kmeans(transformedTrainingWineData, 10, 'Replicates', 100); 
-    [mahalanobisTrainingIndex3, mahalanobisTrainingClassCentre3] = kmeans(mahalanobisTrainingClassCentre10, 3, 'Replicates', 100); 
     mahalanobisKMeansIndex10 = knnsearch(mahalanobisTrainingClassCentre10, normTestingWineData * upperTriag, 'Distance', 'mahalanobis', 'Cov', covMatrixAllNorm);
-    mahalanobisKMeansIndex = LookupKMeansIndex(mahalanobisTrainingIndex3, mahalanobisKMeansIndex10);
+    mahalanobisKMeansIndex = LookupKMeansIndex(mahalanobisTrainingIndex10, mahalanobisKMeansIndex10, trainingDataClassLabel, 10);
     mahalanobisErr = classificationErr(mahalanobisKMeansIndex, 3);
     errorMatrix(5, i) = mahalanobisErr;
 end

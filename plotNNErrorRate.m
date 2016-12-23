@@ -35,7 +35,7 @@ title('KNN Classification based on Correlation Metric for Kmeans');
 set(gca,'xticklabel', xLabel); 
 ylabel('Classification Error/per cent');
 
-errMatrix = [12.5000,7.6250,13.1250,13.1250,12.2500];
+errMatrix = [9.6000, 6.9250, 9.4750, 8.8250, 9.9750];
 figure;
 bar(errMatrix')
 title('KNN Classification based on corresponding metrics for Kmeans,K=10');
