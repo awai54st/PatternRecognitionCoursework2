@@ -96,13 +96,37 @@ covMatrixC3Norm = cov(trainingNormWineDataC3);
     errorMatrix(4, i) = correlationErr; 
      
     %Mahalanobias
-    upperTriag = chol(covMatrixAllNorm);
+    upperTriag = chol(inv(covMatrixAllNorm));
     transformedTrainingWineData = normTrainingWineData * upperTriag;
     [mahalanobisTrainingIndex10, mahalanobisTrainingClassCentre10] = kmeans(transformedTrainingWineData, 10, 'Replicates', 100); 
-    mahalanobisKMeansIndex10 = knnsearch(mahalanobisTrainingClassCentre10, normTestingWineData * upperTriag, 'Distance', 'mahalanobis', 'Cov', covMatrixAllNorm);
+    mahalanobisKMeansIndex10 = knnsearch(mahalanobisTrainingClassCentre10 * inv(upperTriag), normTestingWineData, 'Distance', 'mahalanobis', 'Cov', covMatrixAllNorm);
     mahalanobisKMeansIndex = LookupKMeansIndex(mahalanobisTrainingIndex10, mahalanobisKMeansIndex10, trainingDataClassLabel, 10);
     mahalanobisErr = classificationErr(mahalanobisKMeansIndex, 3);
     errorMatrix(5, i) = mahalanobisErr;
+    
+    upperTriag = chol(inv(covMatrixC1Norm));
+    transformedTrainingWineData = normTrainingWineData * upperTriag;
+    [mahalanobisTrainingIndex10, mahalanobisTrainingClassCentre10] = kmeans(transformedTrainingWineData, 10, 'Replicates', 100); 
+    mahalanobisKMeansIndex10 = knnsearch(mahalanobisTrainingClassCentre10 * inv(upperTriag), normTestingWineData, 'Distance', 'mahalanobis', 'Cov', covMatrixC1Norm);
+    mahalanobisKMeansIndex = LookupKMeansIndex(mahalanobisTrainingIndex10, mahalanobisKMeansIndex10, trainingDataClassLabel, 10);
+    mahalanobisErr = classificationErr(mahalanobisKMeansIndex, 3);
+    errorMatrix(6, i) = mahalanobisErr;
+    
+    upperTriag = chol(inv(covMatrixC2Norm));
+    transformedTrainingWineData = normTrainingWineData * upperTriag;
+    [mahalanobisTrainingIndex10, mahalanobisTrainingClassCentre10] = kmeans(transformedTrainingWineData, 10, 'Replicates', 100); 
+    mahalanobisKMeansIndex10 = knnsearch(mahalanobisTrainingClassCentre10 * inv(upperTriag), normTestingWineData, 'Distance', 'mahalanobis', 'Cov', covMatrixC2Norm);
+    mahalanobisKMeansIndex = LookupKMeansIndex(mahalanobisTrainingIndex10, mahalanobisKMeansIndex10, trainingDataClassLabel, 10);
+    mahalanobisErr = classificationErr(mahalanobisKMeansIndex, 3);
+    errorMatrix(7, i) = mahalanobisErr;
+    
+    upperTriag = chol(inv(covMatrixC3Norm));
+    transformedTrainingWineData = normTrainingWineData * upperTriag;
+    [mahalanobisTrainingIndex10, mahalanobisTrainingClassCentre10] = kmeans(transformedTrainingWineData, 10, 'Replicates', 100); 
+    mahalanobisKMeansIndex10 = knnsearch(mahalanobisTrainingClassCentre10 * inv(upperTriag), normTestingWineData, 'Distance', 'mahalanobis', 'Cov', covMatrixC3Norm);
+    mahalanobisKMeansIndex = LookupKMeansIndex(mahalanobisTrainingIndex10, mahalanobisKMeansIndex10, trainingDataClassLabel, 10);
+    mahalanobisErr = classificationErr(mahalanobisKMeansIndex, 3);
+    errorMatrix(8, i) = mahalanobisErr;
 end
 meanErrorMatrix = mean(errorMatrix,2);
 

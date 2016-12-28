@@ -1,4 +1,4 @@
-function plotNNErrorRate
+function plotNNErrorRate(errMatrix)
 close all;
 sqErrorMatrix = [7.8,6.525,10.475,11.2,3.475];
 cityErrorMatrix = [7.8,6.825,10.4,11.25,7.075];
@@ -35,10 +35,14 @@ title('KNN Classification based on Correlation Metric for Kmeans');
 set(gca,'xticklabel', xLabel); 
 ylabel('Classification Error/per cent');
 
-errMatrix = [9.6000, 6.9250, 9.4750, 8.8250, 9.9750];
+xLabel{6} = 'MahalanobisC1';
+xLabel{7} = 'MahalanobisC2';
+xLabel{8} = 'MahalanobisC3';
+
+%errMatrix = [8.3500,6.8750, 11.8000, 11.1750, 14.1750, 14.8250, 4.6000, 13.2250];
 figure;
 bar(errMatrix')
-title('KNN Classification based on corresponding metrics for Kmeans,K=10');
+title('KNN Classification based on corresponding metrics for Kmeans,K=3');
 set(gca,'xticklabel', xLabel); 
 ylabel('Classification Error/per cent');
 
