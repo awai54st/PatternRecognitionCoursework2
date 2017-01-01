@@ -5,7 +5,7 @@ clc;
 %% Q1)A) la lalalala lalala
 load wine.data.csv;
 errorMatrix = ones(5, 100);
-for i = 1:100
+for i = 100:100
 classIdentifier = wine_data(:,1);
 wineData = wine_data(:,2:14);
 normWineData = normc(wineData);
@@ -99,7 +99,7 @@ covMatrixC3Norm = cov(trainingNormWineDataC3);
     errorMatrix(4, i) = correlationErr; 
     
     
-    Mahalanobias
+    %Mahalanobias
     upperTriag = chol(inv(covMatrixAllNorm));
     transformedTrainingWineData = normTrainingWineData * upperTriag;
     [mahalanobisTrainingIndex, mahalanobisTrainingClassCentre] = kmeans(transformedTrainingWineData, 3, 'Replicates', 100); 

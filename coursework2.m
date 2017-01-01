@@ -68,7 +68,7 @@ covMatrixC2Norm = cov(trainingNormWineDataC2);
 covMatrixC3Norm = cov(trainingNormWineDataC3);
 
 %% Q1)C)
-
+% 
 % figure;
 % scatter (normWineDataC1(:, 5), normWineDataC1(:, 13),30, 'b', 'x');
 % hold on;
@@ -154,7 +154,7 @@ covMatrixC3Norm = cov(trainingNormWineDataC3);
 % scatter(C3Mean(1), C3Mean(2),50, 'y', '*');
 % hold off;
 
-%end
+
 %scatter (covMatrixC1(1, :), covMatrixC1(2, :));
 
 %% Q1)D)
@@ -263,5 +263,6 @@ for i = 1:size(normTestingWineData, 1)
 end
 MNAccuracy(attempts) = sum(MNAccurate)/size(normTestingWineData, 1);
 
-
 end
+
+errorMatrix = [1-mean(L2Accuracy, 2), 1-mean(L1Accuracy, 2), 1-mean(C2Accuracy, 2), 1-mean(HIAccuracy, 2), 1-mean(CLAccuracy, 2), 1-mean(MNAccuracy, 2)];
