@@ -47,5 +47,5 @@ function d=histogram_intersection(XI,XJ)
   
   sxi=sum(XI);
   for i=1:m
-    d(i,1) = 1 - (sum(min(XI, XJ(i,:))) / sxi);
+    d(i,1) = 1- (sum(min(XI, XJ(i,:)))/sum(XI) + sum(min(XI, XJ(i,:)))/sum(XJ(i,:))) / 2;
   end
